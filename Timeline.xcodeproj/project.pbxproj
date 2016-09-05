@@ -17,6 +17,7 @@
 		FA9D4FB11D7E11EA0022D2BF /* SearchResultsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4FB01D7E11EA0022D2BF /* SearchResultsTableViewController.swift */; };
 		FA9D4FB41D7E12C30022D2BF /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4FB31D7E12C30022D2BF /* Post.swift */; };
 		FA9D4FB61D7E12C90022D2BF /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4FB51D7E12C90022D2BF /* Comment.swift */; };
+		FA9D4FB91D7E15B10022D2BF /* PostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4FB81D7E15B10022D2BF /* PostController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		FA9D4FB01D7E11EA0022D2BF /* SearchResultsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsTableViewController.swift; sourceTree = "<group>"; };
 		FA9D4FB31D7E12C30022D2BF /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		FA9D4FB51D7E12C90022D2BF /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		FA9D4FB81D7E15B10022D2BF /* PostController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,8 @@
 			children = (
 				FA9D4F981D7E0B760022D2BF /* AppDelegate.swift */,
 				FA9D4F9C1D7E0B760022D2BF /* Main.storyboard */,
+				FA9D4FB71D7E12D10022D2BF /* Model */,
+				FA9D4FBA1D7E15C40022D2BF /* ModelControllers */,
 				FA9D4FB21D7E12020022D2BF /* ViewControllers */,
 				FA9D4F9F1D7E0B760022D2BF /* Assets.xcassets */,
 				FA9D4FA11D7E0B760022D2BF /* LaunchScreen.storyboard */,
@@ -81,7 +85,6 @@
 				FA9D4FAC1D7E10A70022D2BF /* PostDetailTableViewController.swift */,
 				FA9D4FAE1D7E115F0022D2BF /* NewPostTableViewController.swift */,
 				FA9D4FB01D7E11EA0022D2BF /* SearchResultsTableViewController.swift */,
-				FA9D4FB71D7E12D10022D2BF /* Model */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -93,6 +96,14 @@
 				FA9D4FB51D7E12C90022D2BF /* Comment.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		FA9D4FBA1D7E15C40022D2BF /* ModelControllers */ = {
+			isa = PBXGroup;
+			children = (
+				FA9D4FB81D7E15B10022D2BF /* PostController.swift */,
+			);
+			name = ModelControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,6 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA9D4FAF1D7E115F0022D2BF /* NewPostTableViewController.swift in Sources */,
+				FA9D4FB91D7E15B10022D2BF /* PostController.swift in Sources */,
 				FA9D4F991D7E0B760022D2BF /* AppDelegate.swift in Sources */,
 				FA9D4FB11D7E11EA0022D2BF /* SearchResultsTableViewController.swift in Sources */,
 				FA9D4FB61D7E12C90022D2BF /* Comment.swift in Sources */,
