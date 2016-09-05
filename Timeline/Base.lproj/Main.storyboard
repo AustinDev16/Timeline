@@ -14,14 +14,26 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="rPU-hz-t0Z">
-                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="postCell" rowHeight="100" id="rPU-hz-t0Z" customClass="PostTableViewCell" customModule="Timeline" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="600" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rPU-hz-t0Z" id="fsv-IB-YKP">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="99.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bTd-WZ-gLM">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="99.5"/>
+                                        </imageView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="bTd-WZ-gLM" secondAttribute="bottom" id="6hf-Zm-jYu"/>
+                                        <constraint firstAttribute="trailing" secondItem="bTd-WZ-gLM" secondAttribute="trailing" id="M3t-Sq-kWx"/>
+                                        <constraint firstItem="bTd-WZ-gLM" firstAttribute="leading" secondItem="fsv-IB-YKP" secondAttribute="leading" id="Pj6-tu-A0M"/>
+                                        <constraint firstItem="bTd-WZ-gLM" firstAttribute="top" secondItem="fsv-IB-YKP" secondAttribute="top" id="Tkv-78-iIU"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="postImageView" destination="bTd-WZ-gLM" id="Eg8-ib-pF1"/>
                                     <segue destination="WyF-1U-bsY" kind="show" identifier="toDetailFromExisting" id="pVP-2S-T0s"/>
                                 </connections>
                             </tableViewCell>

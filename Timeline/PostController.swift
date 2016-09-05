@@ -13,6 +13,8 @@ class PostController {
     
     static let sharedController = PostController()
     
+    var posts: [Post] = []
+    
     // Functions
     
     func createPost(image: UIImage, caption: String){
