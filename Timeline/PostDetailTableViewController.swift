@@ -46,7 +46,7 @@ class PostDetailTableViewController: UITableViewController {
                 else {return}
             
             PostController.sharedController.addCommentToPost(newComment, post: post)
-            self.view.endEditing(true)
+            commentAlertController.resignFirstResponder()
             self.tableView.reloadData()
         }
         
