@@ -19,6 +19,5 @@ class Comment {
     let text: String
     let timestamp: NSDate
     let post: Post
-    
-    
 }
+
