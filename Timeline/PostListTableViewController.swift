@@ -12,7 +12,11 @@ class PostListTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tableView.reloadData()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        tableView.reloadData()
     }
 
   
@@ -57,6 +61,13 @@ class PostListTableViewController: UITableViewController {
             
             let selectedPost = PostController.sharedController.posts[indexPath.row]
             detailTVC.post = selectedPost
+            
+            
+            
+            
+            if selectedPost.image == nil {
+                print("Photo is nil")
+            }
             
         } else if segue.identifier == "toAddPost" {
             

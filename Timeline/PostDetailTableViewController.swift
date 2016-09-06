@@ -15,9 +15,8 @@ class PostDetailTableViewController: UITableViewController {
     
     var post: Post?
     
-    func updateWithPost(post: Post){
-        detailImageView.image = post.image
-        self.post = post // See if this works; has given me trouble before
+    func updateWithPost(){
+        detailImageView.image = self.post?.image
         tableView.reloadData()
     }
     
@@ -26,7 +25,7 @@ class PostDetailTableViewController: UITableViewController {
         
         tableView.estimatedRowHeight = 25
         tableView.rowHeight = UITableViewAutomaticDimension
-
+        updateWithPost()
     }
 
     @IBAction func commentButtonTapped(sender: AnyObject) {
