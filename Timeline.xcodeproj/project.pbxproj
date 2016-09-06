@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA2982151D7F7724002C0110 /* SearchableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2982141D7F7724002C0110 /* SearchableObject.swift */; };
 		FA9D4F991D7E0B760022D2BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4F981D7E0B760022D2BF /* AppDelegate.swift */; };
 		FA9D4F9E1D7E0B760022D2BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FA9D4F9C1D7E0B760022D2BF /* Main.storyboard */; };
 		FA9D4FA01D7E0B760022D2BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA9D4F9F1D7E0B760022D2BF /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FA2982141D7F7724002C0110 /* SearchableObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchableObject.swift; sourceTree = "<group>"; };
 		FA9D4F951D7E0B760022D2BF /* Timeline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timeline.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA9D4F981D7E0B760022D2BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA9D4F9D1D7E0B760022D2BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			children = (
 				FA9D4FB31D7E12C30022D2BF /* Post.swift */,
 				FA9D4FB51D7E12C90022D2BF /* Comment.swift */,
+				FA2982141D7F7724002C0110 /* SearchableObject.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -186,6 +189,7 @@
 				FA9D4FB11D7E11EA0022D2BF /* SearchResultsTableViewController.swift in Sources */,
 				FA9D4FB61D7E12C90022D2BF /* Comment.swift in Sources */,
 				FA9D4FB41D7E12C30022D2BF /* Post.swift in Sources */,
+				FA2982151D7F7724002C0110 /* SearchableObject.swift in Sources */,
 				FA9D4FAB1D7E10280022D2BF /* PostListTableViewController.swift in Sources */,
 				FA9D4FAD1D7E10A70022D2BF /* PostDetailTableViewController.swift in Sources */,
 				FA9D4FBC1D7E20D90022D2BF /* PostTableViewCell.swift in Sources */,

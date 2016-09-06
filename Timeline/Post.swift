@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class Post {
+class Post{
     
     init(photoData: NSData, timestamp: NSDate = NSDate(), comments: [Comment] = []){
         self.photoData = photoData
@@ -26,4 +26,11 @@ class Post {
         return UIImage(data: photoData)
     }
     
+}
+
+extension Post: SearchableObject {
+    func matchesSearchTerm(searchTerm: String) -> Bool {
+        let query: [Bool] = comments.flatMap {$0.matchesSearchTerm(searchTerm)}
+        return query.contains(true) ? true : false 
+    }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Comment {
+class Comment{
     
     init(text: String, timestamp: NSDate = NSDate(), post: Post){
         self.text = text
@@ -19,5 +19,11 @@ class Comment {
     let text: String
     let timestamp: NSDate
     let post: Post
+}
+
+extension Comment: SearchableObject {
+    func matchesSearchTerm(searchTerm: String) -> Bool {
+        return text.containsString(searchTerm)
+    }
 }
 

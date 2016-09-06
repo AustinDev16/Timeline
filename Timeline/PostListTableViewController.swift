@@ -61,16 +61,10 @@ class PostListTableViewController: UITableViewController {
             
             let selectedPost = PostController.sharedController.posts[indexPath.row]
             detailTVC.post = selectedPost
-            
-            
-            
-            
-            if selectedPost.image == nil {
-                print("Photo is nil")
-            }
+
             
         } else if segue.identifier == "toAddPost" {
-            
+            // segue for adding new post
         }
         
     }
