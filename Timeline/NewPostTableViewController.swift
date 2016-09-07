@@ -8,17 +8,19 @@
 
 import UIKit
 
-class NewPostTableViewController: UITableViewController, UITextFieldDelegate {
+class NewPostTableViewController: UITableViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
 
     @IBOutlet weak var captionTextField: UITextField!
     @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var selectImageButton: UIButton!
     
+    let imagePicker = UIImagePickerController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         captionTextField.delegate = self
         captionTextField.returnKeyType = .Done
-        
+        imagePicker.delegate = self
        
     }
     
@@ -27,13 +29,39 @@ class NewPostTableViewController: UITableViewController, UITextFieldDelegate {
         return true
     }
 
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+        guard let selectedImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {return}
+        photoImageView.image = selectedImage
+        
+        dismissViewControllerAnimated(true, completion: nil)
+        selectImageButton.hidden = true
+    }
+    
     @IBAction func selectImageButtonTapped(sender: AnyObject) {
         // TODO: - implement actual photo picker
         //let path = NSBundle.mainBundle().pathForResource("musikverein", ofType: "JPEG")
-        let selectedImage = UIImage(named: "musikverein")
-        self.photoImageView.image = selectedImage
+//        let selectedImage = UIImage(named: "musikverein")
+//        self.photoImageView.image = selectedImage
+//        
+//        selectImageButton.hidden = true
+
+        let photoTypeActionSheet = UIAlertController(title: "Select photo from:", message: nil, preferredStyle: .ActionSheet)
+        let photoLibrary = UIAlertAction(title: "Photo Library", style: .Default) { (_) in
+            // photo library stuff
+            
+   //        imagePicker.delegate = self
+            self.imagePicker.sourceType = .PhotoLibrary
+            self.imagePicker.allowsEditing = false
+            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            
+            
+        }
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         
-        selectImageButton.hidden = true
+        photoTypeActionSheet.addAction(cancel)
+        photoTypeActionSheet.addAction(photoLibrary)
+        presentViewController(photoTypeActionSheet, animated: true, completion: nil)
         
     }
     
