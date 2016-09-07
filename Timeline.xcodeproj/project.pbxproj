@@ -86,9 +86,9 @@
 			isa = PBXGroup;
 			children = (
 				FA9D4FBB1D7E20D90022D2BF /* PostTableViewCell.swift */,
-				FA9D4FAA1D7E10280022D2BF /* PostListTableViewController.swift */,
 				FA9D4FAC1D7E10A70022D2BF /* PostDetailTableViewController.swift */,
 				FA9D4FAE1D7E115F0022D2BF /* NewPostTableViewController.swift */,
+				FA9D4FAA1D7E10280022D2BF /* PostListTableViewController.swift */,
 				FA9D4FB01D7E11EA0022D2BF /* SearchResultsTableViewController.swift */,
 			);
 			name = ViewControllers;

@@ -23,7 +23,7 @@ class Comment{
 
 extension Comment: SearchableObject {
     func matchesSearchTerm(searchTerm: String) -> Bool {
-        return text.containsString(searchTerm)
+        return text.lowercaseString.containsString(searchTerm)
     }
 }
 

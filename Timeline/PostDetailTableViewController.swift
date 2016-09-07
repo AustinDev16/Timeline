@@ -20,6 +20,7 @@ class PostDetailTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         

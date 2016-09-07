@@ -8,11 +8,16 @@
 
 import UIKit
 
-class PostListTableViewController: UITableViewController {
+class PostListTableViewController: UITableViewController, UISearchResultsUpdating {
 
+    var searchController: UISearchController?
     override func viewDidLoad() {
         super.viewDidLoad()
+           PostController.sharedController.createMockData()
         tableView.reloadData()
+        setUpSearchController()
+        
+     
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -20,6 +25,28 @@ class PostListTableViewController: UITableViewController {
     }
 
   
+    func setUpSearchController(){
+
+        let storyboard = UIStoryboard(name: "Main", bundle:  nil)
+        let resultController = storyboard.instantiateViewControllerWithIdentifier("resultsTVC")
+        searchController = UISearchController(searchResultsController: resultController)
+        guard let searchController = searchController else {return}
+        
+        searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = true
+        searchController.searchBar.placeholder = "Search for a post"
+        searchController.definesPresentationContext = true
+        tableView.tableHeaderView = searchController.searchBar
+        
+    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        guard let searchTerm = searchController.searchBar.text,
+        resultController = searchController.searchResultsController as? SearchResultsTableViewController else {return}
+        resultController.filteredResults = PostController.sharedController.posts.filter { $0.matchesSearchTerm(searchTerm.lowercaseString)}
+        resultController.tableView.reloadData()
+    }
+    
 
     // MARK: - Table view data source
 

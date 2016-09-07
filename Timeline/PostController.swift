@@ -15,6 +15,21 @@ class PostController {
     
     var posts: [Post] = []
     
+    func createMockData(){
+        
+        guard let image = UIImage(named: "musikverein") else {return}
+        PostController.sharedController.createPost(image, caption: "Vienna!")
+        PostController.sharedController.addCommentToPost("Austria", post: self.posts[0])
+        
+        PostController.sharedController.createPost(image, caption: "Germany")
+        PostController.sharedController.addCommentToPost("Austria", post: self.posts[1])
+        PostController.sharedController.addCommentToPost("Traveling around the world!", post: self.posts[1])
+        
+        
+        
+        
+        
+    }
     // Functions
     
     func createPost(image: UIImage, caption: String){
