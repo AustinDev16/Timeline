@@ -92,6 +92,11 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
             
         } else if segue.identifier == "toAddPost" {
             // segue for adding new post
+        } else if segue.identifier == "toDetailFromSearch" {
+            guard let selectedPost = sender as? Post,
+                detailTVC = segue.destinationViewController as? PostDetailTableViewController else {return}
+           
+            detailTVC.post = selectedPost
         }
         
     }
