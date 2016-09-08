@@ -36,7 +36,8 @@ class PostController {
         guard let imageData = UIImageJPEGRepresentation(image, 0.5) else { return }
         let newPost = Post(photoData: imageData)
         addCommentToPost(caption, post: newPost)
-        self.posts.append(newPost)
+        //self.posts.append(newPost)
+        self.posts.insert(newPost, atIndex: 0)
     }
     
     func addCommentToPost(text: String, post: Post){
