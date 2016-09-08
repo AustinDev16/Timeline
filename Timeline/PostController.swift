@@ -32,6 +32,64 @@ class PostController {
     }
     // Functions
     
+    func fetchPosts(){
+        
+        cloudKitManager.fetchRecordsWithType("post", recordFetchedBlock: nil) { (records, error) in
+            if error == nil {
+               
+                guard let records = records else {return}
+                dispatch_async(dispatch_get_main_queue(), {
+                    print(records)
+                    
+                let fetchedPosts = records.flatMap({ Post(record: $0)})
+                   _ = fetchedPosts.map{self.fetchCommentsForPost($0)}
+                    self.posts = fetchedPosts
+                    print(self.posts.count)
+                    
+                   
+                    
+                    
+                })
+                
+            } else {
+                print("Error fetching. \(error?.localizedDescription)")
+            }
+        }
+    }
+    
+    func fetchCommentsForPost(post: Post){
+        
+        guard let recordID = post.cloudKitRecordID else { print("No cloudKitrecord id on post"); return}
+        let predicate = NSPredicate(value: true)
+        // Predicate that says, look for comments with this id in their "post" field
+        cloudKitManager.fetchRecordsWithType("comment", predicate: predicate, recordFetchedBlock: nil) { (records, error) in
+            print("Back from comment search")
+            print(records)
+            print(error)
+            if error == nil {
+                guard let records = records else { return}
+                dispatch_async(dispatch_get_main_queue(), {
+                    
+                    let fetchedComments = records.map{Comment(record: $0)} as? [Comment]
+                    if let fetchedComments = fetchedComments {
+                        for comment in fetchedComments {
+                            comment.post = post
+                        }
+                    post.comments = fetchedComments
+                        
+                        print(post.comments.count)
+                    }
+                })
+                
+                
+                
+            } else {
+                print("Error fetching comments for post: \(error?.localizedDescription)")
+            }
+        }
+        
+    }
+    
     func createPost(image: UIImage, caption: String){
         guard let imageData = UIImageJPEGRepresentation(image, 0.5) else { return }
         
@@ -42,7 +100,8 @@ class PostController {
             if error == nil{
                 guard let record = record else {return}
                 newPost.cloudKitRecordID = record.recordID
-                self.addCommentToPost(caption, post: newPost, postRecord: newCKRecord)
+                newPost.record = record
+                self.addCommentToPost(caption, post: newPost)
                 //self.posts.append(newPost)
                 dispatch_async(dispatch_get_main_queue()) {
                      self.posts.insert(newPost, atIndex: 0)
@@ -58,23 +117,13 @@ class PostController {
       
     }
     
-    func addCommentToPost(text: String, post: Post, postRecord: CKRecord?){
+    func addCommentToPost(text: String, post: Post){
         let newComment = Comment(text: text, post: post)
-        var recordToReference: CKRecord?
-        if let postRecord = postRecord { recordToReference = postRecord } else {
-            guard let recordID = post.cloudKitRecordID else {return}
-            cloudKitManager.fetchRecordWithID(recordID, completion: { (record, error) in
-                if error != nil{
-                    guard let record = record else {return}
-                    recordToReference = record
-                } else {
-                    print("Error fetching record from cloudKit: \(error?.localizedDescription)")
-                }
-            })
-        }
+       
+    
         
         guard let newCKRecord = CKRecord(comment: newComment, post: post),
-        let record = recordToReference else {return}
+        let record = post.record  else {return}
         newCKRecord["post"] = CKReference(record: record, action: .DeleteSelf)
         
         cloudKitManager.saveRecord(newCKRecord) { (record, error) in

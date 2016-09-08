@@ -45,7 +45,7 @@ class PostDetailTableViewController: UITableViewController {
                 newComment = commentTextField[0].text where newComment.characters.count > 0
                 else {return}
             
-            PostController.sharedController.addCommentToPost(newComment, post: post, postRecord: nil)
+            PostController.sharedController.addCommentToPost(newComment, post: post)
             commentAlertController.resignFirstResponder()
             self.tableView.reloadData()
         }

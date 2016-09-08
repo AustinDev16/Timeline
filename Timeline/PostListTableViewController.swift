@@ -17,6 +17,10 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
         tableView.reloadData()
         setUpSearchController()
         
+        PostController.sharedController.fetchPosts()
+  //      PostController.sharedController.fetchCommentsForPost(PostController.sharedController.posts[0])
+        tableView.reloadData()
+        
      
     }
     

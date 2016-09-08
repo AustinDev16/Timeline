@@ -19,13 +19,13 @@ class Post: CloudKitSyncable {
     }
     
     required init?(record: CKRecord){
-        guard let photoData = record["photoData"] as? NSData,
-            let timestamp = record["timestamp"] as? NSDate,
-            let comments = record["Comments"] as? [Comment] else { return nil}
-        self.photoData = photoData
+        guard let photoData = record["photoURL"] as? CKAsset,
+            let timestamp = record["timestamp"] as? NSDate else { return nil}
+        self.photoData = NSData(contentsOfURL: photoData.fileURL)
         self.timestamp = timestamp
-        self.comments = comments
+        self.comments = []
         self.cloudKitRecordID = record.recordID
+        self.record = record
         
     }
     
@@ -46,6 +46,8 @@ class Post: CloudKitSyncable {
         guard let cloudKitRecordID = self.cloudKitRecordID else {return nil}
         return CKReference(recordID: cloudKitRecordID, action: .DeleteSelf)
     }
+    
+    var record: CKRecord?
     
     var temporaryPhotoURL: NSURL {
         
