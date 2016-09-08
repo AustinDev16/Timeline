@@ -35,7 +35,7 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = true
         searchController.searchBar.placeholder = "Search for a post"
-        searchController.definesPresentationContext = true
+        self.definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar
         
     }
@@ -93,10 +93,10 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
         } else if segue.identifier == "toAddPost" {
             // segue for adding new post
         } else if segue.identifier == "toDetailFromSearch" {
-            guard let selectedPost = sender as? Post,
+            guard let selectedCell = sender as? PostTableViewCell,
                 detailTVC = segue.destinationViewController as? PostDetailTableViewController else {return}
            
-            detailTVC.post = selectedPost
+            detailTVC.post = selectedCell.post
         }
         
     }

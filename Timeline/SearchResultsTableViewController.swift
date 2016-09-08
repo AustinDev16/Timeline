@@ -23,7 +23,9 @@ class SearchResultsTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 //        let selectedPost = filteredResults[indexPath.row]
-        let selectedCell = tableView.cellForRowAtIndexPath(indexPath)
+        let selectedCell = tableView.cellForRowAtIndexPath(indexPath) as? PostTableViewCell
+        let selectedPost = filteredResults[indexPath.row]
+        selectedCell?.post = selectedPost
         self.presentingViewController?.performSegueWithIdentifier("toDetailFromSearch", sender: selectedCell)
     }
 
@@ -57,21 +59,7 @@ class SearchResultsTableViewController: UITableViewController {
     
 
  
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//       if segue.identifier == "toDetailFromSearch"{
-//        
-//        guard let indexPath = tableView.indexPathForSelectedRow,
-//            detailTVC = segue.destinationViewController as? PostDetailTableViewController else {return}
-//        let selectedPost = filteredResults[indexPath.row]
-//        detailTVC.post = selectedPost
-//        
-//        
-//        }
-    }
+  
     
 
 }

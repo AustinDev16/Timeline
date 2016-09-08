@@ -10,6 +10,8 @@ import UIKit
 
 class PostTableViewCell: UITableViewCell {
 
+    var post: Post?
+    
     @IBOutlet weak var postImageView: UIImageView!
     
     func updateWithPost(post: Post){
