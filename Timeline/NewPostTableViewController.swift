@@ -57,10 +57,19 @@ class NewPostTableViewController: UITableViewController, UITextFieldDelegate, UI
             
             
         }
+        let camera = UIAlertAction(title: "Camera", style: .Default) { (_) in
+            self.imagePicker.sourceType = .Camera
+            self.imagePicker.allowsEditing = false
+            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+        }
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         
         photoTypeActionSheet.addAction(cancel)
         photoTypeActionSheet.addAction(photoLibrary)
+        
+        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+        
+            photoTypeActionSheet.addAction(camera)}
         presentViewController(photoTypeActionSheet, animated: true, completion: nil)
         
     }
