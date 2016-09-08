@@ -8,8 +8,9 @@
 
 import Foundation
 import UIKit
+import CloudKit
 
-class Post{
+class Post: CloudKitSyncable{
     
     init(photoData: NSData, timestamp: NSDate = NSDate(), comments: [Comment] = []){
         self.photoData = photoData
@@ -17,13 +18,31 @@ class Post{
         self.comments = comments
     }
     
+    required init?(record: CKRecord){
+        guard let photoData = record["photoData"] as? NSData,
+            let timestamp = record["timestamp"] as? NSDate,
+            let comments = record["Comments"] as? [Comment] else { return nil}
+        self.photoData = photoData
+        self.timestamp = timestamp
+        self.comments = comments
+        
+    }
+    
     let photoData: NSData?
     let timestamp: NSDate
     var comments: [Comment]
+    var cloudKitRecordID: CKRecordID?
+    var recordType: String = "Post"
     
     var image: UIImage? {
         guard let photoData = photoData else { return UIImage() }
         return UIImage(data: photoData)
+    }
+    
+    var isSynced: Bool { return cloudKitRecordID != nil}
+    var cloudKitReference: CKReference? {
+        guard let cloudKitRecordID = self.cloudKitRecordID else {return nil}
+        return CKReference(recordID: cloudKitRecordID, action: .DeleteSelf)
     }
     
 }
