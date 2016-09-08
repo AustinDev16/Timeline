@@ -26,6 +26,7 @@ class Comment: CloudKitSyncable{
         self.text = text
         self.timestamp = timestamp
         self.post = post
+        self.cloudKitRecordID = record.recordID
         
     }
     

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CloudKit
 
-class Post: CloudKitSyncable{
+class Post: CloudKitSyncable {
     
     init(photoData: NSData, timestamp: NSDate = NSDate(), comments: [Comment] = []){
         self.photoData = photoData
@@ -25,8 +25,10 @@ class Post: CloudKitSyncable{
         self.photoData = photoData
         self.timestamp = timestamp
         self.comments = comments
+        self.cloudKitRecordID = record.recordID
         
     }
+    
     
     let photoData: NSData?
     let timestamp: NSDate
@@ -43,6 +45,19 @@ class Post: CloudKitSyncable{
     var cloudKitReference: CKReference? {
         guard let cloudKitRecordID = self.cloudKitRecordID else {return nil}
         return CKReference(recordID: cloudKitRecordID, action: .DeleteSelf)
+    }
+    
+    var temporaryPhotoURL: NSURL {
+        
+        // Must write to temporary directory to be able to pass image file path url to CKAsset
+        
+        let temporaryDirectory = NSTemporaryDirectory()
+        let temporaryDirectoryURL = NSURL(fileURLWithPath: temporaryDirectory)
+        let fileURL = temporaryDirectoryURL.URLByAppendingPathComponent(NSUUID().UUIDString).URLByAppendingPathExtension("jpg")
+        
+        photoData?.writeToURL(fileURL, atomically: true)
+        
+        return fileURL
     }
     
 }
