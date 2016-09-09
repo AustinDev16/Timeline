@@ -32,7 +32,12 @@ class Post: CloudKitSyncable {
     
     let photoData: NSData?
     let timestamp: NSDate
-    var comments: [Comment]
+    var comments: [Comment] {
+        didSet{
+            let commentNotification = NSNotification(name: "CommentsUpdated", object: nil)
+            NSNotificationCenter.defaultCenter().postNotification(commentNotification)
+        }
+    }
     var cloudKitRecordID: CKRecordID?
     var recordType: String = "Post"
     

@@ -17,7 +17,12 @@ class PostController {
     let cloudKitManager = CloudKitManager()
     
     
-    var posts: [Post] = []
+    var posts: [Post] = [] {
+        didSet{
+           let postNotification = NSNotification(name: "PostsHaveBeenUpdated", object: nil)
+            NSNotificationCenter.defaultCenter().postNotification(postNotification)
+        }
+    }
     
     func createMockData(){
         

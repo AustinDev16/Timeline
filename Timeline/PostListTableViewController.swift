@@ -11,6 +11,8 @@ import UIKit
 class PostListTableViewController: UITableViewController, UISearchResultsUpdating {
 
     var searchController: UISearchController?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
            PostController.sharedController.createMockData()
@@ -20,8 +22,12 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
         PostController.sharedController.fetchPosts()
   //      PostController.sharedController.fetchCommentsForPost(PostController.sharedController.posts[0])
         tableView.reloadData()
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateTableView), name: "PostsHaveBeenUpdated", object: nil)
      
+    }
+    
+    func updateTableView(){
+        tableView.reloadData()
     }
     
     override func viewWillAppear(animated: Bool) {

@@ -27,6 +27,12 @@ class PostDetailTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 25
         tableView.rowHeight = UITableViewAutomaticDimension
         updateWithPost()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateComments), name: "CommentsUpdated", object: nil)
+    }
+    
+    func updateComments(){
+        tableView.reloadData()
     }
 
     @IBAction func commentButtonTapped(sender: AnyObject) {
