@@ -48,7 +48,8 @@ class PostController {
                     
                 let fetchedPosts = records.flatMap({ Post(record: $0)})
                    _ = fetchedPosts.map{self.fetchCommentsForPost($0)}
-                    self.posts = fetchedPosts
+                    let sortedPosts = fetchedPosts.sort { $0.0.timestamp.timeIntervalSince1970 > $0.1.timestamp.timeIntervalSince1970 }
+                    self.posts = sortedPosts
                     print(self.posts.count)
                     
                    
@@ -81,7 +82,7 @@ class PostController {
                         for comment in fetchedComments {
                             comment.post = post
                         }
-                    post.comments = fetchedComments
+                        post.comments = fetchedComments.sort {$0.0.timestamp.timeIntervalSince1970 < $0.1.timestamp.timeIntervalSince1970}
                         
                         print(post.comments.count)
                     }

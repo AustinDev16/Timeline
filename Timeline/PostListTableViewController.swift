@@ -19,6 +19,7 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
         tableView.reloadData()
         setUpSearchController()
         
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         PostController.sharedController.fetchPosts()
   //      PostController.sharedController.fetchCommentsForPost(PostController.sharedController.posts[0])
         tableView.reloadData()
@@ -27,6 +28,7 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
     }
     
     func updateTableView(){
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
         tableView.reloadData()
     }
     
