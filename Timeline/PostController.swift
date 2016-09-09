@@ -65,7 +65,8 @@ class PostController {
     func fetchCommentsForPost(post: Post){
         
         guard let recordID = post.cloudKitRecordID else { print("No cloudKitrecord id on post"); return}
-        let predicate = NSPredicate(value: true)
+        //let predicate = NSPredicate(value: true)
+        let predicate = NSPredicate(format: "post == %@", recordID)
         // Predicate that says, look for comments with this id in their "post" field
         cloudKitManager.fetchRecordsWithType("comment", predicate: predicate, recordFetchedBlock: nil) { (records, error) in
             print("Back from comment search")
