@@ -32,7 +32,10 @@ class PostDetailTableViewController: UITableViewController {
     }
     
     func updateComments(){
-        tableView.reloadData()
+        dispatch_async(dispatch_get_main_queue(), {
+           self.tableView.reloadData()
+        })
+        
     }
 
     @IBAction func commentButtonTapped(sender: AnyObject) {
@@ -85,9 +88,16 @@ class PostDetailTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("commentCell", forIndexPath: indexPath)
-        let comment = post?.comments[indexPath.row]
-        cell.textLabel?.text = comment?.text
-        cell.detailTextLabel?.text = String(comment?.timestamp)
+        
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .ShortStyle
+        formatter.timeStyle = .ShortStyle
+        formatter.doesRelativeDateFormatting = true
+        
+        
+        guard let comment = post?.comments[indexPath.row] else { return UITableViewCell() }
+        cell.textLabel?.text = comment.text
+        cell.detailTextLabel?.text = formatter.stringFromDate(comment.timestamp)
         // Configure the cell...
 
         return cell
