@@ -16,6 +16,7 @@ class PostController {
     
     let cloudKitManager = CloudKitManager()
     
+    var unownedComments: [Comment] = []
     
     var posts: [Post] = [] {
         didSet{
@@ -36,6 +37,85 @@ class PostController {
         
     }
     // Functions
+    func syncedRecords(recordType: String) -> [CKReference?] {
+        switch recordType{
+        case "post":
+            
+            let syncedPosts = PostController.sharedController.posts.filter{$0.isSynced == true}
+            let syncedRecords = syncedPosts.map { $0.cloudKitReference }
+            return syncedRecords
+            
+            
+            
+        case "comment":
+            
+            let syncedComments = PostController.sharedController.posts.flatMap { $0.comments.filter { $0.isSynced == true } }
+            let syncedRecords = syncedComments.map { $0.cloudKitReference }
+            return syncedRecords
+        default: return []
+        }
+    }
+    
+    func unsyncedRecords(recordType: String) -> [CloudKitSyncable]{
+        switch recordType{
+        case "post":
+            let unsyncedRecords = PostController.sharedController.posts.filter{$0.isSynced != true}
+            return unsyncedRecords
+        case "comment":
+            let unsyncedRecords = PostController.sharedController.posts.flatMap { $0.comments.filter { $0.isSynced != true } }
+            return unsyncedRecords
+        default: return []
+        }
+    }
+    
+    func fetchNewRecords(recordType: String, completion: () -> Void){
+        
+        guard let referencesToExclude = syncedRecords(recordType) as? [CKReference] else {completion(); return}
+        
+//        let predicate = NSPredicate(format: "NOT(recordID IN %@)", argumentArray: [referencesToExclude])
+        //print(predicate)
+        let predicate = NSPredicate(value: true)
+        let recordFetchedBlock: ((record: CKRecord) -> Void)? = { record in
+            switch record.recordType{
+            case "post":
+                if let newPost = Post(record: record){
+                    dispatch_async(dispatch_get_main_queue(), {
+                         PostController.sharedController.posts.insert(newPost, atIndex: 0)
+                    })
+                }
+                case "comment":
+                    if let newComment = Comment(record: record){
+                        // add code here to implement any new comments
+                        self.unownedComments.append(newComment)
+                    }
+                return
+            default:
+                return
+            }
+            
+            
+        }
+        
+        
+        cloudKitManager.fetchRecordsWithType(recordType, predicate: predicate, recordFetchedBlock: recordFetchedBlock){ record, error in
+            // finish up full batch
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                for comment in self.unownedComments {
+                    let selectedPost = PostController.sharedController.posts.filter { $0.cloudKitRecordID == comment.cloudKitRecordID}
+                    _ = selectedPost.map {
+                        comment.post = $0
+                        $0.comments.insert(comment, atIndex: 0)}
+                }
+                
+                self.unownedComments = []
+                completion()
+                
+                
+            })
+        }
+    }
     
     func fetchPosts(){
         

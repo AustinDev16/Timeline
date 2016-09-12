@@ -12,6 +12,19 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
 
     var searchController: UISearchController?
     
+    @IBAction func refreshButtonTapped(sender: AnyObject) {
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        PostController.sharedController.fetchNewRecords("post") { 
+            dispatch_async(dispatch_get_main_queue(), {
+                PostController.sharedController.fetchNewRecords("comment", completion: { 
+                    dispatch_async(dispatch_get_main_queue(), {
+                                   UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                    })
+                })
+            })
+        }
+          //  PostController.sharedController.fetchPosts()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
