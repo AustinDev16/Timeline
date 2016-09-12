@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import CloudKit
 
 class PostController {
     
@@ -30,7 +31,7 @@ class PostController {
         
         
     }
-    // Functions
+    // MARK: OnDevice Functions
     
     func createPost(image: UIImage, caption: String){
         guard let imageData = UIImageJPEGRepresentation(image, 0.5) else { return }
@@ -43,6 +44,35 @@ class PostController {
     func addCommentToPost(text: String, post: Post){
         let newComment = Comment(text: text, post: post)
         post.comments.append(newComment)
+    }
+    
+    // MARK: CloudKitRelated
+    
+    func fetchPosts(){ // Fetches all posts and comments upon launch of the app
+    
+    }
+    
+    func pushUnsyncedPosts(){ // Pushes any local changes that haven't been synced
+        
+    }
+    
+    func fetchNewPosts(){ // Fetches any new posts from the cloud, and corresponding comments
+    
+    }
+    
+    func fetchNewComments(){ // Fetches any new comments made to existing posts.
+        
+    }
+    
+    func performFullSync(){ // pushes local changes, downloads any new content
+        pushUnsyncedPosts()
+        fetchNewPosts()
+        fetchNewComments()
+    }
+    
+    func returnPostFromCKReference(postReference: CKReference) -> Post? {
+        let recordID = postReference.recordID
+        return self.posts.filter{ $0.cloudKitRecordID == recordID }.first
     }
     
 }

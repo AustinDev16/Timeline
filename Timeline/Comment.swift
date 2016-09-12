@@ -7,18 +7,43 @@
 //
 
 import Foundation
+import CloudKit
 
-class Comment{
+class Comment: CloudKitSyncable {
     
     init(text: String, timestamp: NSDate = NSDate(), post: Post){
         self.text = text
         self.timestamp = timestamp
         self.post = post
+        self.recordType = "comment"
+        self.cloudKitRecordID = nil
+    }
+    
+    required init?(record: CKRecord){
+        guard let text = record["text"] as? String,
+            let timestamp = record["timestamp"] as? NSDate,
+            let postReference = record["post"] as? CKReference,
+            let recordType = record["recordType"] as? String,
+            let cloudKitRecordID = record["recordID"] as? CKRecordID,
+            let post = PostController.sharedController.returnPostFromCKReference(postReference) else {return nil}
+        
+        self.text = text
+        self.timestamp = timestamp
+        self.post = post
+        self.recordType = recordType
+        self.cloudKitRecordID = cloudKitRecordID
     }
     
     let text: String
     let timestamp: NSDate
     let post: Post
+    
+    // CloudKitSyncable
+    
+    var recordType: String
+    var cloudKitRecordID: CKRecordID?
+    var isSynced: Bool { return cloudKitRecordID != nil }
+
 }
 
 extension Comment: SearchableObject {
