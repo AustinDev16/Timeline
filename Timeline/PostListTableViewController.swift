@@ -11,13 +11,17 @@ import UIKit
 class PostListTableViewController: UITableViewController, UISearchResultsUpdating {
 
     var searchController: UISearchController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
            PostController.sharedController.createMockData()
         tableView.reloadData()
         setUpSearchController()
-        
-     
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateTableView), name: "postsArrayUpdated", object: nil)
+    }
+    
+    func updateTableView(){
+        self.tableView.reloadData()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -34,6 +38,7 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
         
         searchController.searchResultsUpdater = self
         searchController.hidesNavigationBarDuringPresentation = true
+        searchController.dimsBackgroundDuringPresentation = true
         searchController.searchBar.placeholder = "Search for a post"
         self.definesPresentationContext = true
         tableView.tableHeaderView = searchController.searchBar

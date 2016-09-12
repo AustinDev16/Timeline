@@ -14,7 +14,14 @@ class PostController {
     
     static let sharedController = PostController()
     
-    var posts: [Post] = []
+    var posts: [Post] = [] {
+        didSet{
+            dispatch_async(dispatch_get_main_queue(), {
+                let notification = NSNotification(name: "postsArrayUpdated", object: nil)
+                NSNotificationCenter.defaultCenter().postNotification(notification)
+            })
+        }
+    }
     
     func createMockData(){
         

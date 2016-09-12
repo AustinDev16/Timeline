@@ -35,7 +35,14 @@ class Post: CloudKitSyncable{
     
     let photoData: NSData?
     let timestamp: NSDate
-    var comments: [Comment]
+    var comments: [Comment] {
+        didSet{
+            dispatch_async(dispatch_get_main_queue(), {
+                let notification = NSNotification(name: "commentsUpdated", object: nil)
+                NSNotificationCenter.defaultCenter().postNotification(notification)
+            })
+        }
+    }
     
     var image: UIImage? {
         guard let photoData = photoData else { return UIImage() }
