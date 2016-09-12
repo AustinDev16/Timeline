@@ -46,6 +46,17 @@ class Comment: CloudKitSyncable {
 
 }
 
+extension CKRecord {
+    convenience init?(comment: Comment){
+        self.init(recordType: comment.recordType)
+        self["text"] = comment.text
+        self["timestamp"] = comment.timestamp
+        guard let postReference = comment.post.cloudKitRecordID else { return}
+        self["post"] = CKReference(recordID: postReference, action: .DeleteSelf)
+        
+    }
+}
+
 extension Comment: SearchableObject {
     func matchesSearchTerm(searchTerm: String) -> Bool {
         return text.lowercaseString.containsString(searchTerm)

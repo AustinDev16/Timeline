@@ -47,7 +47,27 @@ class Post: CloudKitSyncable{
     var recordType: String
     var cloudKitRecordID: CKRecordID?
     var isSynced: Bool { return cloudKitRecordID != nil }
+    private var temporaryPhotoURL: NSURL {
+        
+        // Must write to temporary directory to be able to pass image file path url to CKAsset
+        
+        let temporaryDirectory = NSTemporaryDirectory()
+        let temporaryDirectoryURL = NSURL(fileURLWithPath: temporaryDirectory)
+        let fileURL = temporaryDirectoryURL.URLByAppendingPathComponent(NSUUID().UUIDString).URLByAppendingPathExtension("jpg")
+        
+        photoData?.writeToURL(fileURL, atomically: true)
+        
+        return fileURL
+    }
 
+}
+
+extension CKRecord{
+    convenience init?(post: Post){
+        self.init(recordType: post.recordType)
+        self["timestamp"] = post.timestamp
+        self["photo"] = CKAsset(fileURL: post.temporaryPhotoURL)
+    }
 }
 
 extension Post: SearchableObject {

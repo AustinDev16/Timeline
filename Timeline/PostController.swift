@@ -26,10 +26,6 @@ class PostController {
         PostController.sharedController.addCommentToPost("Austria", post: self.posts[1])
         PostController.sharedController.addCommentToPost("Traveling around the world!", post: self.posts[1])
         
-        
-        
-        
-        
     }
     // MARK: OnDevice Functions
     
@@ -71,6 +67,7 @@ class PostController {
     }
     
     func returnPostFromCKReference(postReference: CKReference) -> Post? {
+        // Grabs a Post object by querying its recordID
         let recordID = postReference.recordID
         return self.posts.filter{ $0.cloudKitRecordID == recordID }.first
     }
