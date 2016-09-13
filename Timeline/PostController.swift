@@ -14,6 +14,8 @@ class PostController {
     
     static let sharedController = PostController()
     
+    var newPostsFromCloud: [Post] = []
+    
     var posts: [Post] = [] {
         didSet{
             dispatch_async(dispatch_get_main_queue(), {
@@ -72,6 +74,19 @@ class PostController {
     }
     
     // MARK: CloudKitRelated
+    func getUnsyncedObjects(type: String) -> [AnyObject]{
+        switch type{
+        case "post":
+            let unsyncedPosts = PostController.sharedController.posts.filter{ $0.isSynced != true}
+            return unsyncedPosts
+        case "comment":
+            let unsyncedComments = PostController.sharedController.posts.flatMap{ $0.comments}.filter{ $0.isSynced != true }
+            return unsyncedComments
+
+        default:
+            return []
+        }
+    }
     
     func fetchPosts(){ // Fetches all posts and comments upon launch of the app
         let perPostCompletion: (record: CKRecord) -> Void = { record in
@@ -116,18 +131,86 @@ class PostController {
         
     }
     
-    func fetchNewPosts(){ // Fetches any new posts from the cloud, and corresponding comments
+    func fetchNewPosts(references: [CKReference], completion: ([CKRecord] -> Void)){ // Fetches any new posts from the cloud, and corresponding comments
+        let perPostCompletion: (record: CKRecord) -> Void = { record in
+            if let newPost = Post(record: record) {
+                PostController.sharedController.newPostsFromCloud.append(newPost)
+            }
+        }
+        
+        let predicate = NSPredicate(format: "NOT(recordID IN %@)", references)
+        CloudKitManager.sharedController.fetchRecordsWithType("post", predicate: predicate, recordFetchedBlock: perPostCompletion) { (records, error) in
+            defer { completion([])}
+            if error != nil {
+                print("Error fetching new posts: \(error?.localizedDescription)")
+                return
+            } else {
+                // fetch comments for new posts
+                _ = PostController.sharedController.newPostsFromCloud.map { self.getCommentsForPost($0) }
+                
+            }
+        }
     
     }
     
-    func fetchNewComments(){ // Fetches any new comments made to existing posts.
+    func fetchNewComments(references: [CKReference], completion: ([CKRecord] -> Void)){ // Fetches any new comments made to existing posts.
+        
+          let predicate = NSPredicate(format: "NOT(recordID IN %@)", references)
+    CloudKitManager.sharedController.fetchRecordsWithType("comment", predicate: predicate, recordFetchedBlock: nil) { (records, error) in
+        
+            if error != nil {
+                print("Error fetching new unpaired comments: \(error?.localizedDescription)")
+            } else {
+                guard let records = records else { return}
+                let unassignedComments = records.flatMap{ Comment(record: $0)}
+                
+                for comment in unassignedComments {
+                    let referencePost = comment.post
+                    referencePost.comments.append(comment)
+                }
+                completion([])
+            }
+        }
+        
+        
+        
         
     }
     
     func performFullSync(){ // pushes local changes, downloads any new content
-        pushUnsyncedPosts()
-        fetchNewPosts()
-        fetchNewComments()
+        // Check first for any unsaved local records
+        guard let unsyncedPosts = getUnsyncedObjects("post") as? [Post] else {return}
+        guard let unsyncedComments = getUnsyncedObjects("comment") as? [Comment] else {return}
+        if unsyncedPosts.count > 0 || unsyncedComments.count > 0 {
+            // create new records and sync them here
+            pushUnsyncedPosts()
+        }
+        // Generate a list of all records on device as CKReference and pass to CloudKit
+        
+        let fullPostReferenceList = PostController.sharedController.posts.map{ CKReference(recordID: $0.cloudKitRecordID!, action: .DeleteSelf) }
+        
+        newPostsFromCloud = []
+        
+        fetchNewPosts(fullPostReferenceList){ records in
+           _ = PostController.sharedController.newPostsFromCloud.map{ PostController.sharedController.posts.append($0)}
+            PostController.sharedController.newPostsFromCloud = []
+            // Now search for any new comments for existing posts
+            
+            let fullCommentList = PostController.sharedController.posts.flatMap{ $0.comments}
+            let fullCommentReferenceList = fullCommentList.map{ CKReference(recordID: $0.cloudKitRecordID!, action: .DeleteSelf)}
+            
+            self.fetchNewComments(fullCommentReferenceList){ records in
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    let notification = NSNotification(name: "toggleNetworkIndicator", object: nil)
+                    
+                    NSNotificationCenter.defaultCenter().postNotification(notification)
+
+                })
+            }
+            
+        }
+       
     }
     
     func returnPostFromCKReference(postReference: CKReference) -> Post? {

@@ -45,6 +45,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Timeline" id="F1n-2T-g8C">
+                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="Zol-IT-M1c">
+                            <connections>
+                                <action selector="refreshButtonTapped:" destination="R88-bO-j6f" id="hUO-Ej-cA9"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Zz8-Ac-1uH">
                             <connections>
                                 <segue destination="Hnm-qb-dtZ" kind="presentation" identifier="toAddPost" id="Hri-Tl-uch"/>

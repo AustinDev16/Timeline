@@ -12,6 +12,12 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
 
     var searchController: UISearchController?
     
+    @IBAction func refreshButtonTapped(sender: AnyObject) {
+      UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        PostController.sharedController.performFullSync()
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
            PostController.sharedController.createMockData()
