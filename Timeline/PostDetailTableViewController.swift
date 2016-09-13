@@ -87,7 +87,13 @@ class PostDetailTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("commentCell", forIndexPath: indexPath)
         let comment = post?.comments[indexPath.row]
         cell.textLabel?.text = comment?.text
-        cell.detailTextLabel?.text = String(comment?.timestamp)
+        
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .ShortStyle
+        formatter.timeStyle = .ShortStyle
+        formatter.doesRelativeDateFormatting = true
+        guard let date = comment?.timestamp else {return UITableViewCell()}
+        cell.detailTextLabel?.text = formatter.stringFromDate(date)//String(comment?.timestamp)
         // Configure the cell...
 
         return cell
