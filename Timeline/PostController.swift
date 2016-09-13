@@ -39,14 +39,36 @@ class PostController {
     func createPost(image: UIImage, caption: String){
         guard let imageData = UIImageJPEGRepresentation(image, 0.5) else { return }
         let newPost = Post(photoData: imageData)
-        addCommentToPost(caption, post: newPost)
+        //addCommentToPost(caption, post: newPost)
         //self.posts.append(newPost)
         self.posts.insert(newPost, atIndex: 0)
+        
+        // Push new post to CloudKit
+        guard let newPostRecord = CKRecord(post: newPost) else { return}
+        CloudKitManager.sharedController.saveRecord(newPostRecord) { (record, error) in
+            if error != nil {
+                print("Error pushing post to cloud: \(error?.localizedDescription)")
+            } else {
+                guard let record = record else {return}
+                newPost.cloudKitRecordID = record.recordID
+                // Create comment record
+                self.addCommentToPost(caption, post: newPost)
+            }
+        }
     }
     
     func addCommentToPost(text: String, post: Post){
         let newComment = Comment(text: text, post: post)
         post.comments.append(newComment)
+        guard let commentRecord = CKRecord(comment: newComment) else {return}
+        CloudKitManager.sharedController.saveRecord(commentRecord) { (record, error) in
+            if error != nil {
+                print("Error pushing comment to cloud: \(error?.localizedDescription)")
+            } else {
+                guard let record = record else { return}
+                newComment.cloudKitRecordID = record.recordID
+            }
+        }
     }
     
     // MARK: CloudKitRelated
