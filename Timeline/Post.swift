@@ -21,7 +21,7 @@ class Post: CloudKitSyncable{
     }
     
     required init?(record: CKRecord){ //From CloudKit
-        guard let photoURL = record["photo"] as? CKAsset,
+        guard let photoURL = record["photoURL"] as? CKAsset,
             let timestamp = record["timestamp"] as? NSDate,
             let recordID = record["recordID"] as? CKRecordID,
             let recordType = record["recordType"] as? String else {return nil}
@@ -73,7 +73,7 @@ extension CKRecord{
     convenience init?(post: Post){
         self.init(recordType: post.recordType)
         self["timestamp"] = post.timestamp
-        self["photo"] = CKAsset(fileURL: post.temporaryPhotoURL)
+        self["photoURL"] = CKAsset(fileURL: post.temporaryPhotoURL)
     }
 }
 

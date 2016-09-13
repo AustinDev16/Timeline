@@ -17,11 +17,20 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
            PostController.sharedController.createMockData()
         tableView.reloadData()
         setUpSearchController()
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateTableView), name: "postsArrayUpdated", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.toggleNetworkIndicator), name: "toggleNetworkIndicator", object: nil)
+        
+        toggleNetworkIndicator()
+        PostController.sharedController.fetchPosts()
     }
     
     func updateTableView(){
         self.tableView.reloadData()
+    }
+    
+    func toggleNetworkIndicator(){
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = !UIApplication.sharedApplication().networkActivityIndicatorVisible
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -55,10 +64,6 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
@@ -84,7 +89,6 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
     
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
        
         if segue.identifier == "toDetailFromExisting"{
