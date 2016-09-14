@@ -18,19 +18,24 @@ class Post: CloudKitSyncable{
         self.comments = comments
         self.cloudKitRecordID = nil
         self.recordType = "post"
+        //self.subscriptionID = nil
     }
     
     required init?(record: CKRecord){ //From CloudKit
         guard let photoURL = record["photoURL"] as? CKAsset,
             let timestamp = record["timestamp"] as? NSDate,
             let recordID = record["recordID"] as? CKRecordID,
-            let recordType = record["recordType"] as? String else {return nil}
+            let recordType = record["recordType"] as? String
+            else {return nil}
         
         self.photoData = NSData(contentsOfURL: photoURL.fileURL)
         self.timestamp = timestamp
         self.cloudKitRecordID = recordID
         self.recordType = recordType
         self.comments = []
+        self.subscriptionID = record["subscriptionID"] as? String
+        print(self.subscriptionID)
+        self.cloudKitRecord = record
     }
     
     let photoData: NSData?
@@ -51,10 +56,11 @@ class Post: CloudKitSyncable{
     
     //CloudKitSyncable
     
-    
+    var cloudKitRecord: CKRecord?
     var recordType: String
     var cloudKitRecordID: CKRecordID?
     var isSynced: Bool { return cloudKitRecordID != nil }
+    var subscriptionID: String?
     private var temporaryPhotoURL: NSURL {
         
         // Must write to temporary directory to be able to pass image file path url to CKAsset
@@ -75,6 +81,7 @@ extension CKRecord{
         self.init(recordType: post.recordType)
         self["timestamp"] = post.timestamp
         self["photoURL"] = CKAsset(fileURL: post.temporaryPhotoURL)
+        self["subscriptionID"] = post.subscriptionID
     }
 }
 

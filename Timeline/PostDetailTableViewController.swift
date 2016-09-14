@@ -12,12 +12,20 @@ class PostDetailTableViewController: UITableViewController {
     
     @IBOutlet weak var detailImageView: UIImageView!
     
+    @IBOutlet weak var followButton: UIBarButtonItem!
     
     var post: Post?
+    var canToggleSubscribing: Bool = true
     
     func updateWithPost(){
         detailImageView.image = self.post?.image
         tableView.reloadData()
+        
+        if post?.subscriptionID == nil {
+            self.followButton.title = "Follow Post"
+        } else {
+            self.followButton.title = "Unfollow Post"
+        }
     }
     
  
@@ -68,7 +76,39 @@ class PostDetailTableViewController: UITableViewController {
 
     @IBAction func followPostButtonTapped(sender: AnyObject) {
         guard let post = self.post else { return}
-        PostController.sharedController.subscribeToFollowPost("comment", post: post)
+        
+        if canToggleSubscribing {
+            
+            let subscriptionID = post.subscriptionID
+            switch subscriptionID {
+            case nil: // means no subscription exists yet for this post
+                canToggleSubscribing = false
+                PostController.sharedController.subscribeToFollowPost("comment", post: post){success in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.canToggleSubscribing = true
+                        if success {
+                            // toggle button
+                            self.followButton.title = "Unfollow Post"
+                        }
+                        
+                    })
+                
+                }
+            default: // means there is a subscription for this post
+                canToggleSubscribing = false
+              PostController.sharedController.unsubscribeFromPost("comment", post: post){success in
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.canToggleSubscribing = true
+                    if success {
+                        // toggle button
+                        self.followButton.title = "Follow Post"
+                    }
+                })
+                
+                }
+            }
+        }
     }
     
     

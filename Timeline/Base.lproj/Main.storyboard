@@ -280,6 +280,7 @@
                     </tableView>
                     <connections>
                         <outlet property="detailImageView" destination="iBb-7p-YAJ" id="8xH-lb-JiC"/>
+                        <outlet property="followButton" destination="Ewx-mO-Mk1" id="R4K-x8-Cke"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="v3p-m8-y2u" userLabel="First Responder" sceneMemberID="firstResponder"/>

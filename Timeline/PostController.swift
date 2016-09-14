@@ -52,6 +52,7 @@ class PostController {
                 print("Error pushing post to cloud: \(error?.localizedDescription)")
             } else {
                 guard let record = record else {return}
+                newPost.cloudKitRecord = record
                 newPost.cloudKitRecordID = record.recordID
                 // Create comment record
                 self.addCommentToPost(caption, post: newPost)
@@ -220,7 +221,7 @@ class PostController {
     }
     
     
-    func subscribeToFollowPost(type: String, post: Post){
+    func subscribeToFollowPost(type: String, post: Post, completion: (success: Bool) -> Void){
         
         let reference = CKReference(recordID: post.cloudKitRecordID!, action: .DeleteSelf)
         
@@ -228,12 +229,59 @@ class PostController {
         CloudKitManager.sharedController.subscribe(type, predicate: predicate, subscriptionID: NSUUID().UUIDString, contentAvailable: false, alertBody: "New comment on a post you're following!", desiredKeys: nil, options: .FiresOnRecordCreation) { (subscription, error) in
             if error != nil{
                 print("Error saving subscription: \(error?.localizedDescription)")
+                completion(success: false)
             } else {
                 guard let subscription = subscription else {return}
                 print("Successfully saved subscription.")
                 print(subscription.subscriptionID)
+                post.subscriptionID = subscription.subscriptionID
+                
+                
+                // modify record in cloud
+                guard let record = post.cloudKitRecord else { return }
+                record.setValue(subscription.subscriptionID, forKey: "subscriptionID")
+                CloudKitManager.sharedController.modifyRecords([record], perRecordCompletion: nil, completion: { (records, error) in
+                    if error != nil {
+                        print("Error saving modified record to cloud: \(error?.localizedDescription)")
+                    } else {
+                        print("Success modifying record.")
+                        guard let records = records else {return}
+                        post.cloudKitRecord = records.first
+                    }
+                })
+             completion(success: true)
             }
         }
+        
+    }
+    
+    func unsubscribeFromPost(type: String, post: Post, completion: (success: Bool) -> Void){
+        guard let subscriptionID = post.subscriptionID else { return}
+        CloudKitManager.sharedController.unsubscribe(subscriptionID) { (subscriptionID, error) in
+            if error != nil {
+                print("Error canceling subscription: \(error?.localizedDescription)")
+                completion(success: false)
+            } else {
+                post.subscriptionID = nil
+                
+                // modify record in cloud
+                // modify record in cloud
+                guard let record = post.cloudKitRecord else { return }
+                record.setValue(nil, forKey: "subscriptionID")
+                CloudKitManager.sharedController.modifyRecords([record], perRecordCompletion: nil, completion: { (records, error) in
+                    if error != nil {
+                        print("Error saving modified record to cloud: \(error?.localizedDescription)")
+                    } else {
+                        print("Success modifying record.")
+                        guard let records = records else {return}
+                        post.cloudKitRecord = records.first
+
+                    }
+                })
+             completion(success: true)
+            }
+        }
+        
         
     }
     
