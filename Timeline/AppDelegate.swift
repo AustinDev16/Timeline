@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let notificationSettings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
         UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
         
+        
+        
         return true
     }
     
@@ -34,6 +36,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         PostController.sharedController.performFullSync()
+        
+        let newComment = UIAlertController(title: "New comment!", message: "Someone commented on a post you're following.", preferredStyle: .Alert)
+        
+        let okay = UIAlertAction(title: "Dismiss", style: .Default) { (_) in
+            
+        }
+        
+        let view = UIAlertAction(title: "View Post", style: .Default) { (_) in
+            // Find which post has the new comment
+            
+            // Segue to the post
+        }
+        
+        newComment.addAction(okay)
+        newComment.addAction(view)
+        
+        self.window?.rootViewController?.presentViewController(newComment, animated: true, completion: nil)
     }
 
 }
