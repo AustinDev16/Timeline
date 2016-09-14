@@ -70,6 +70,9 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
 
     // MARK: - Table view data source
 
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 250.0
+    }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
