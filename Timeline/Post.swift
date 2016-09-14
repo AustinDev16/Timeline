@@ -50,7 +50,8 @@ class Post: CloudKitSyncable{
     }
     
     //CloudKitSyncable
-
+    
+    
     var recordType: String
     var cloudKitRecordID: CKRecordID?
     var isSynced: Bool { return cloudKitRecordID != nil }

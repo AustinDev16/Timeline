@@ -219,4 +219,22 @@ class PostController {
         return self.posts.filter{ $0.cloudKitRecordID == recordID }.first
     }
     
+    
+    func subscribeToFollowPost(type: String, post: Post){
+        
+        let reference = CKReference(recordID: post.cloudKitRecordID!, action: .DeleteSelf)
+        
+        let predicate = NSPredicate(format: "post == %@", reference)
+        CloudKitManager.sharedController.subscribe(type, predicate: predicate, subscriptionID: NSUUID().UUIDString, contentAvailable: false, alertBody: "New comment on a post you're following!", desiredKeys: nil, options: .FiresOnRecordCreation) { (subscription, error) in
+            if error != nil{
+                print("Error saving subscription: \(error?.localizedDescription)")
+            } else {
+                guard let subscription = subscription else {return}
+                print("Successfully saved subscription.")
+                print(subscription.subscriptionID)
+            }
+        }
+        
+    }
+    
 }

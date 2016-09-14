@@ -67,6 +67,8 @@ class PostDetailTableViewController: UITableViewController {
     }
 
     @IBAction func followPostButtonTapped(sender: AnyObject) {
+        guard let post = self.post else { return}
+        PostController.sharedController.subscribeToFollowPost("comment", post: post)
     }
     
     
