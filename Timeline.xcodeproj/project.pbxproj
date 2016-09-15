@@ -23,6 +23,7 @@
 		FA9D4FB61D7E12C90022D2BF /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4FB51D7E12C90022D2BF /* Comment.swift */; };
 		FA9D4FB91D7E15B10022D2BF /* PostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4FB81D7E15B10022D2BF /* PostController.swift */; };
 		FA9D4FBC1D7E20D90022D2BF /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4FBB1D7E20D90022D2BF /* PostTableViewCell.swift */; };
+		FAC70E841D8B3DCC00A5E968 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70E831D8B3DCC00A5E968 /* Stack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		FA9D4FB51D7E12C90022D2BF /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		FA9D4FB81D7E15B10022D2BF /* PostController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostController.swift; sourceTree = "<group>"; };
 		FA9D4FBB1D7E20D90022D2BF /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		FAC70E831D8B3DCC00A5E968 /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +122,7 @@
 			children = (
 				FA9D4FB81D7E15B10022D2BF /* PostController.swift */,
 				FA756F211D8743CF00A9499F /* CloudKitManager.swift */,
+				FAC70E831D8B3DCC00A5E968 /* Stack.swift */,
 			);
 			name = ModelControllers;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA9D4FAF1D7E115F0022D2BF /* NewPostTableViewController.swift in Sources */,
+				FAC70E841D8B3DCC00A5E968 /* Stack.swift in Sources */,
 				FA756F241D8746C300A9499F /* CloudKitSyncable.swift in Sources */,
 				FA756F221D8743CF00A9499F /* CloudKitManager.swift in Sources */,
 				FA9D4FB91D7E15B10022D2BF /* PostController.swift in Sources */,
