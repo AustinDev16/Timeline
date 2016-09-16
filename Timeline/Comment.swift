@@ -8,8 +8,9 @@
 
 import Foundation
 import CloudKit
+import CoreData
 
-class Comment: CloudKitSyncable {
+class Comment: NSManagedObject, CloudKitSyncable {
     
     init(text: String, timestamp: NSDate = NSDate(), post: Post){
         self.text = text
@@ -34,13 +35,13 @@ class Comment: CloudKitSyncable {
         self.cloudKitRecordID = cloudKitRecordID
     }
     
-    let text: String
-    let timestamp: NSDate
+    //let text: String
+    //let timestamp: NSDate
     let post: Post
     
     // CloudKitSyncable
     
-    var recordType: String
+    //var recordType: String
     var cloudKitRecordID: CKRecordID?
     var isSynced: Bool { return cloudKitRecordID != nil }
 

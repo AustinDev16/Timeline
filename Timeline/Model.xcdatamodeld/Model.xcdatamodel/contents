@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15G1004" minimumToolsVersion="Xcode 7.0">
+    <entity name="Comment" representedClassName=".Comment" syncable="YES">
+        <attribute name="cloudKitRecordName" attributeType="String" syncable="YES"/>
+        <attribute name="postRecordName" attributeType="String" syncable="YES"/>
+        <attribute name="recordType" attributeType="String" syncable="YES"/>
+        <attribute name="text" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" attributeType="Date" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="Post" representedClassName=".Post" syncable="YES">
+        <attribute name="cloudKitRecordName" attributeType="String" syncable="YES"/>
+        <attribute name="photoData" attributeType="Binary" syncable="YES"/>
+        <attribute name="recordType" attributeType="String" syncable="YES"/>
+        <attribute name="subscriptionID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" attributeType="Date" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Post" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="Comment" positionX="214" positionY="-18" width="128" height="118"/>
+    </elements>
+</model>

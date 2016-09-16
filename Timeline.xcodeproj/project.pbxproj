@@ -24,6 +24,9 @@
 		FA9D4FB91D7E15B10022D2BF /* PostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4FB81D7E15B10022D2BF /* PostController.swift */; };
 		FA9D4FBC1D7E20D90022D2BF /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9D4FBB1D7E20D90022D2BF /* PostTableViewCell.swift */; };
 		FAC70E841D8B3DCC00A5E968 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70E831D8B3DCC00A5E968 /* Stack.swift */; };
+		FAEF4BFF1D8C4FA0004DC925 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAEF4BFD1D8C4FA0004DC925 /* Model.xcdatamodeld */; };
+		FAEF4C041D8C56DA004DC925 /* Post+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEF4C001D8C56DA004DC925 /* Post+CoreDataProperties.swift */; };
+		FAEF4C061D8C56DA004DC925 /* Comment+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEF4C021D8C56DA004DC925 /* Comment+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +50,9 @@
 		FA9D4FB81D7E15B10022D2BF /* PostController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostController.swift; sourceTree = "<group>"; };
 		FA9D4FBB1D7E20D90022D2BF /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		FAC70E831D8B3DCC00A5E968 /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
+		FAEF4BFE1D8C4FA0004DC925 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		FAEF4C001D8C56DA004DC925 /* Post+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Post+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		FAEF4C021D8C56DA004DC925 /* Comment+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Comment+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +70,8 @@
 		FA9D4F8C1D7E0B760022D2BF = {
 			isa = PBXGroup;
 			children = (
+				FAEF4C001D8C56DA004DC925 /* Post+CoreDataProperties.swift */,
+				FAEF4C021D8C56DA004DC925 /* Comment+CoreDataProperties.swift */,
 				FA756F261D87A94300A9499F /* CloudKit.framework */,
 				FA9D4F971D7E0B760022D2BF /* Timeline */,
 				FA9D4F961D7E0B760022D2BF /* Products */,
@@ -112,6 +120,7 @@
 				FA9D4FB31D7E12C30022D2BF /* Post.swift */,
 				FA756F231D8746C300A9499F /* CloudKitSyncable.swift */,
 				FA9D4FB51D7E12C90022D2BF /* Comment.swift */,
+				FAEF4BFD1D8C4FA0004DC925 /* Model.xcdatamodeld */,
 				FA2982141D7F7724002C0110 /* SearchableObject.swift */,
 			);
 			name = Model;
@@ -205,12 +214,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA9D4FAF1D7E115F0022D2BF /* NewPostTableViewController.swift in Sources */,
+				FAEF4C061D8C56DA004DC925 /* Comment+CoreDataProperties.swift in Sources */,
 				FAC70E841D8B3DCC00A5E968 /* Stack.swift in Sources */,
 				FA756F241D8746C300A9499F /* CloudKitSyncable.swift in Sources */,
+				FAEF4BFF1D8C4FA0004DC925 /* Model.xcdatamodeld in Sources */,
 				FA756F221D8743CF00A9499F /* CloudKitManager.swift in Sources */,
 				FA9D4FB91D7E15B10022D2BF /* PostController.swift in Sources */,
 				FA9D4F991D7E0B760022D2BF /* AppDelegate.swift in Sources */,
 				FA9D4FB11D7E11EA0022D2BF /* SearchResultsTableViewController.swift in Sources */,
+				FAEF4C041D8C56DA004DC925 /* Post+CoreDataProperties.swift in Sources */,
 				FA9D4FB61D7E12C90022D2BF /* Comment.swift in Sources */,
 				FA9D4FB41D7E12C30022D2BF /* Post.swift in Sources */,
 				FA2982151D7F7724002C0110 /* SearchableObject.swift in Sources */,
@@ -373,6 +385,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		FAEF4BFD1D8C4FA0004DC925 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FAEF4BFE1D8C4FA0004DC925 /* Model.xcdatamodel */,
+			);
+			currentVersion = FAEF4BFE1D8C4FA0004DC925 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = FA9D4F8D1D7E0B760022D2BF /* Project object */;
 }

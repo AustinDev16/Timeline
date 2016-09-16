@@ -9,8 +9,9 @@
 import Foundation
 import UIKit
 import CloudKit
+import CoreData
 
-class Post: CloudKitSyncable{
+class Post: NSManagedObject, CloudKitSyncable{
     
     init(photoData: NSData, timestamp: NSDate = NSDate(), comments: [Comment] = []){
         self.photoData = photoData
@@ -38,9 +39,9 @@ class Post: CloudKitSyncable{
         self.cloudKitRecord = record
     }
     
-    let photoData: NSData?
-    let timestamp: NSDate
-    var comments: [Comment] {
+    //let photoData: NSData?
+    //let timestamp: NSDate
+     var comments: [Comment] {
         didSet{
             dispatch_async(dispatch_get_main_queue(), {
                 let notification = NSNotification(name: "commentsUpdated", object: nil)
@@ -57,10 +58,10 @@ class Post: CloudKitSyncable{
     //CloudKitSyncable
     
     var cloudKitRecord: CKRecord?
-    var recordType: String
+    //var recordType: String
     var cloudKitRecordID: CKRecordID?
     var isSynced: Bool { return cloudKitRecordID != nil }
-    var subscriptionID: String?
+    //var subscriptionID: String?
     private var temporaryPhotoURL: NSURL {
         
         // Must write to temporary directory to be able to pass image file path url to CKAsset
