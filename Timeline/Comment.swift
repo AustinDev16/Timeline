@@ -11,7 +11,7 @@ import CloudKit
 
 class Comment: CloudKitSyncable {
     
-    init(text: String, timestamp: NSDate = NSDate(), post: Post){
+    init(text: String, timestamp: Date = Date(), post: Post){
         self.text = text
         self.timestamp = timestamp
         self.post = post
@@ -21,7 +21,7 @@ class Comment: CloudKitSyncable {
     
     required init?(record: CKRecord){
         guard let text = record["text"] as? String,
-            let timestamp = record["timestamp"] as? NSDate,
+            let timestamp = record["timestamp"] as? Date,
             let postReference = record["post"] as? CKReference,
             let recordType = record["recordType"] as? String,
             let cloudKitRecordID = record["recordID"] as? CKRecordID,
@@ -35,7 +35,7 @@ class Comment: CloudKitSyncable {
     }
     
     let text: String
-    let timestamp: NSDate
+    let timestamp: Date
     let post: Post
     
     // CloudKitSyncable
@@ -49,17 +49,17 @@ class Comment: CloudKitSyncable {
 extension CKRecord {
     convenience init?(comment: Comment){
         self.init(recordType: comment.recordType)
-        self["text"] = comment.text
-        self["timestamp"] = comment.timestamp
+        self["text"] = comment.text as CKRecordValue?
+        self["timestamp"] = comment.timestamp as CKRecordValue?
         guard let postReference = comment.post.cloudKitRecordID else { return}
-        self["post"] = CKReference(recordID: postReference, action: .DeleteSelf)
+        self["post"] = CKReference(recordID: postReference, action: .deleteSelf)
         
     }
 }
 
 extension Comment: SearchableObject {
-    func matchesSearchTerm(searchTerm: String) -> Bool {
-        return text.lowercaseString.containsString(searchTerm)
+    func matchesSearchTerm(_ searchTerm: String) -> Bool {
+        return text.lowercased().contains(searchTerm)
     }
 }
 

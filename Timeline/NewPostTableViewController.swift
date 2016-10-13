@@ -19,26 +19,26 @@ class NewPostTableViewController: UITableViewController, UITextFieldDelegate, UI
     override func viewDidLoad() {
         super.viewDidLoad()
         captionTextField.delegate = self
-        captionTextField.returnKeyType = .Done
+        captionTextField.returnKeyType = .done
         imagePicker.delegate = self
        
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         captionTextField.resignFirstResponder()
         return true
     }
 
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         guard let selectedImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {return}
         photoImageView.image = selectedImage
         
-        dismissViewControllerAnimated(true, completion: nil)
-        selectImageButton.hidden = true
+        dismiss(animated: true, completion: nil)
+        selectImageButton.isHidden = true
     }
     
-    @IBAction func selectImageButtonTapped(sender: AnyObject) {
+    @IBAction func selectImageButtonTapped(_ sender: AnyObject) {
         // TODO: - implement actual photo picker
         //let path = NSBundle.mainBundle().pathForResource("musikverein", ofType: "JPEG")
 //        let selectedImage = UIImage(named: "musikverein")
@@ -46,67 +46,67 @@ class NewPostTableViewController: UITableViewController, UITextFieldDelegate, UI
 //        
 //        selectImageButton.hidden = true
 
-        let photoTypeActionSheet = UIAlertController(title: "Select photo from:", message: nil, preferredStyle: .ActionSheet)
-        let photoLibrary = UIAlertAction(title: "Photo Library", style: .Default) { (_) in
+        let photoTypeActionSheet = UIAlertController(title: "Select photo from:", message: nil, preferredStyle: .actionSheet)
+        let photoLibrary = UIAlertAction(title: "Photo Library", style: .default) { (_) in
             // photo library stuff
             
    //        imagePicker.delegate = self
-            self.imagePicker.sourceType = .PhotoLibrary
+            self.imagePicker.sourceType = .photoLibrary
             self.imagePicker.allowsEditing = false
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.present(self.imagePicker, animated: true, completion: nil)
             
             
         }
-        let camera = UIAlertAction(title: "Camera", style: .Default) { (_) in
-            self.imagePicker.sourceType = .Camera
+        let camera = UIAlertAction(title: "Camera", style: .default) { (_) in
+            self.imagePicker.sourceType = .camera
             self.imagePicker.allowsEditing = false
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            self.present(self.imagePicker, animated: true, completion: nil)
         }
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         photoTypeActionSheet.addAction(cancel)
         photoTypeActionSheet.addAction(photoLibrary)
         
-        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
         
             photoTypeActionSheet.addAction(camera)}
-        presentViewController(photoTypeActionSheet, animated: true, completion: nil)
+        present(photoTypeActionSheet, animated: true, completion: nil)
         
     }
     
     
-    @IBAction func addPostButtonTapped(sender: AnyObject) {
-        guard let caption = captionTextField.text where caption.characters.count > 0,
+    @IBAction func addPostButtonTapped(_ sender: AnyObject) {
+        guard let caption = captionTextField.text , caption.characters.count > 0,
             let photo = photoImageView.image else {
                 
                 // present error alert if fields are not present
-                let notEnoughInfoAlert = UIAlertController(title: "Could not create post", message: "Please pick an image and/or add a caption.", preferredStyle: .Alert)
+                let notEnoughInfoAlert = UIAlertController(title: "Could not create post", message: "Please pick an image and/or add a caption.", preferredStyle: .alert)
                 
-                let okay = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                let okay = UIAlertAction(title: "OK", style: .default, handler: nil)
                 
                 notEnoughInfoAlert.addAction(okay)
-                presentViewController(notEnoughInfoAlert, animated: true, completion: nil)
+                present(notEnoughInfoAlert, animated: true, completion: nil)
                 
                 return
         }
         
         PostController.sharedController.createPost(photo, caption: caption)
         print(PostController.sharedController.posts.count)
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     
-    @IBAction func cancelButtonTapped(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func cancelButtonTapped(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 3
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return 1
     }

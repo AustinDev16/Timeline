@@ -12,8 +12,8 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
 
     var searchController: UISearchController?
     
-    @IBAction func refreshButtonTapped(sender: AnyObject) {
-      UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+    @IBAction func refreshButtonTapped(_ sender: AnyObject) {
+      UIApplication.shared.isNetworkActivityIndicatorVisible = true
         PostController.sharedController.performFullSync()
     }
     
@@ -24,8 +24,8 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
         tableView.reloadData()
         setUpSearchController()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateTableView), name: "postsArrayUpdated", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.toggleNetworkIndicator), name: "toggleNetworkIndicator", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateTableView), name: NSNotification.Name(rawValue: "postsArrayUpdated"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.toggleNetworkIndicator), name: NSNotification.Name(rawValue: "toggleNetworkIndicator"), object: nil)
         
         toggleNetworkIndicator()
         PostController.sharedController.fetchPosts()
@@ -36,10 +36,10 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
     }
     
     func toggleNetworkIndicator(){
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = !UIApplication.sharedApplication().networkActivityIndicatorVisible
+        UIApplication.shared.isNetworkActivityIndicatorVisible = !UIApplication.shared.isNetworkActivityIndicatorVisible
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
     }
 
@@ -47,7 +47,7 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
     func setUpSearchController(){
 
         let storyboard = UIStoryboard(name: "Main", bundle:  nil)
-        let resultController = storyboard.instantiateViewControllerWithIdentifier("resultsTVC")
+        let resultController = storyboard.instantiateViewController(withIdentifier: "resultsTVC")
         searchController = UISearchController(searchResultsController: resultController)
         guard let searchController = searchController else {return}
         
@@ -60,29 +60,29 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
         
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         guard let searchTerm = searchController.searchBar.text,
-        resultController = searchController.searchResultsController as? SearchResultsTableViewController else {return}
-        resultController.filteredResults = PostController.sharedController.posts.filter { $0.matchesSearchTerm(searchTerm.lowercaseString)}
+        let resultController = searchController.searchResultsController as? SearchResultsTableViewController else {return}
+        resultController.filteredResults = PostController.sharedController.posts.filter { $0.matchesSearchTerm(searchTerm.lowercased())}
         resultController.tableView.reloadData()
     }
     
 
     // MARK: - Table view data source
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 250.0
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return PostController.sharedController.posts.count
     }
 
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("postCell", forIndexPath: indexPath) as? PostTableViewCell
-        let post = PostController.sharedController.posts[indexPath.row]
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? PostTableViewCell
+        let post = PostController.sharedController.posts[(indexPath as NSIndexPath).row]
         
         cell?.updateWithPost(post)
         
@@ -98,13 +98,13 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
     
     // MARK: - Navigation
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
        
         if segue.identifier == "toDetailFromExisting"{
             guard let indexPath = tableView.indexPathForSelectedRow,
-            detailTVC = segue.destinationViewController as? PostDetailTableViewController else { return }
+            let detailTVC = segue.destination as? PostDetailTableViewController else { return }
             
-            let selectedPost = PostController.sharedController.posts[indexPath.row]
+            let selectedPost = PostController.sharedController.posts[(indexPath as NSIndexPath).row]
             detailTVC.post = selectedPost
 
             
@@ -112,7 +112,7 @@ class PostListTableViewController: UITableViewController, UISearchResultsUpdatin
             // segue for adding new post
         } else if segue.identifier == "toDetailFromSearch" {
             guard let selectedCell = sender as? PostTableViewCell,
-                detailTVC = segue.destinationViewController as? PostDetailTableViewController else {return}
+                let detailTVC = segue.destination as? PostDetailTableViewController else {return}
            
             detailTVC.post = selectedCell.post
         }

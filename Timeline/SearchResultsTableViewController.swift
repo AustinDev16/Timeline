@@ -21,33 +21,33 @@ class SearchResultsTableViewController: UITableViewController {
 
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        let selectedPost = filteredResults[indexPath.row]
-        let selectedCell = tableView.cellForRowAtIndexPath(indexPath) as? PostTableViewCell
-        let selectedPost = filteredResults[indexPath.row]
+        let selectedCell = tableView.cellForRow(at: indexPath) as? PostTableViewCell
+        let selectedPost = filteredResults[(indexPath as NSIndexPath).row]
         selectedCell?.post = selectedPost
-        self.presentingViewController?.performSegueWithIdentifier("toDetailFromSearch", sender: selectedCell)
+        self.presentingViewController?.performSegue(withIdentifier: "toDetailFromSearch", sender: selectedCell)
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return filteredResults.count
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 250.0
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("resultCell", forIndexPath: indexPath) as? PostTableViewCell
-        let post = filteredResults[indexPath.row] //as? Post
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "resultCell", for: indexPath) as? PostTableViewCell
+        let post = filteredResults[(indexPath as NSIndexPath).row] //as? Post
         
         
         cell?.postImageView.image = post.image

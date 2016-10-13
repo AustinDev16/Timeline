@@ -36,27 +36,27 @@ class PostDetailTableViewController: UITableViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
         updateWithPost()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.updateCommentsTableViewData), name: "commentsUpdated", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateCommentsTableViewData), name: NSNotification.Name(rawValue: "commentsUpdated"), object: nil)
     }
     
     func updateCommentsTableViewData(){
         self.tableView.reloadData()
     }
 
-    @IBAction func commentButtonTapped(sender: AnyObject) {
+    @IBAction func commentButtonTapped(_ sender: AnyObject) {
         // Configure Alert Controller to populate a new comment
         
-        let commentAlertController = UIAlertController(title: "New Comment", message: nil, preferredStyle: .Alert)
-        commentAlertController.addTextFieldWithConfigurationHandler { (commentTextField) in
+        let commentAlertController = UIAlertController(title: "New Comment", message: nil, preferredStyle: .alert)
+        commentAlertController.addTextField { (commentTextField) in
             commentTextField.placeholder = "Leave a comment:"
         }
         
         
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-        let post = UIAlertAction(title: "Add comment", style: .Default) { (_) in
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let post = UIAlertAction(title: "Add comment", style: .default) { (_) in
             guard let post = self.post,
-                commentTextField = commentAlertController.textFields,
-                newComment = commentTextField[0].text where newComment.characters.count > 0
+                let commentTextField = commentAlertController.textFields,
+                let newComment = commentTextField[0].text , newComment.characters.count > 0
                 else {return}
             
             PostController.sharedController.addCommentToPost(newComment, post: post)
@@ -67,14 +67,14 @@ class PostDetailTableViewController: UITableViewController {
         commentAlertController.addAction(cancel)
         commentAlertController.addAction(post)
         
-        presentViewController(commentAlertController, animated: true, completion: nil)
+        present(commentAlertController, animated: true, completion: nil)
         
     }
 
-    @IBAction func sendButtonTapped(sender: AnyObject) {
+    @IBAction func sendButtonTapped(_ sender: AnyObject) {
     }
 
-    @IBAction func followPostButtonTapped(sender: AnyObject) {
+    @IBAction func followPostButtonTapped(_ sender: AnyObject) {
         guard let post = self.post else { return}
         
         if canToggleSubscribing {
@@ -84,7 +84,7 @@ class PostDetailTableViewController: UITableViewController {
             case nil: // means no subscription exists yet for this post
                 canToggleSubscribing = false
                 PostController.sharedController.subscribeToFollowPost("comment", post: post){success in
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         self.canToggleSubscribing = true
                         if success {
                             // toggle button
@@ -98,7 +98,7 @@ class PostDetailTableViewController: UITableViewController {
                 canToggleSubscribing = false
               PostController.sharedController.unsubscribeFromPost("comment", post: post){success in
                 
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async(execute: {
                     self.canToggleSubscribing = true
                     if success {
                         // toggle button
@@ -114,28 +114,28 @@ class PostDetailTableViewController: UITableViewController {
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return post?.comments.count ?? 0
     }
 
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("commentCell", forIndexPath: indexPath)
-        let comment = post?.comments[indexPath.row]
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath)
+        let comment = post?.comments[(indexPath as NSIndexPath).row]
         cell.textLabel?.text = comment?.text
         
-        let formatter = NSDateFormatter()
-        formatter.dateStyle = .ShortStyle
-        formatter.timeStyle = .ShortStyle
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
         formatter.doesRelativeDateFormatting = true
         guard let date = comment?.timestamp else {return UITableViewCell()}
-        cell.detailTextLabel?.text = formatter.stringFromDate(date)//String(comment?.timestamp)
+        cell.detailTextLabel?.text = formatter.string(from: date as Date)//String(comment?.timestamp)
         // Configure the cell...
 
         return cell

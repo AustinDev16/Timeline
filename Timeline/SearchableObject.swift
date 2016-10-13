@@ -11,6 +11,6 @@ import Foundation
 
 protocol SearchableObject {
     
-    func matchesSearchTerm(searchTerm: String) -> Bool
+    func matchesSearchTerm(_ searchTerm: String) -> Bool
     
 }

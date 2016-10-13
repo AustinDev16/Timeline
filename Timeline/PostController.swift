@@ -18,9 +18,9 @@ class PostController {
     
     var posts: [Post] = [] {
         didSet{
-            dispatch_async(dispatch_get_main_queue(), {
-                let notification = NSNotification(name: "postsArrayUpdated", object: nil)
-                NSNotificationCenter.defaultCenter().postNotification(notification)
+            DispatchQueue.main.async(execute: {
+                let notification = Notification(name: Notification.Name(rawValue: "postsArrayUpdated"), object: nil)
+                NotificationCenter.default.post(notification)
             })
         }
     }
@@ -38,12 +38,12 @@ class PostController {
     }
     // MARK: OnDevice Functions
     
-    func createPost(image: UIImage, caption: String){
+    func createPost(_ image: UIImage, caption: String){
         guard let imageData = UIImageJPEGRepresentation(image, 0.5) else { return }
         let newPost = Post(photoData: imageData)
         //addCommentToPost(caption, post: newPost)
         //self.posts.append(newPost)
-        self.posts.insert(newPost, atIndex: 0)
+        self.posts.insert(newPost, at: 0)
         
         // Push new post to CloudKit
         guard let newPostRecord = CKRecord(post: newPost) else { return}
@@ -60,7 +60,7 @@ class PostController {
         }
     }
     
-    func addCommentToPost(text: String, post: Post){
+    func addCommentToPost(_ text: String, post: Post){
         let newComment = Comment(text: text, post: post)
         post.comments.append(newComment)
         guard let commentRecord = CKRecord(comment: newComment) else {return}
@@ -75,7 +75,7 @@ class PostController {
     }
     
     // MARK: CloudKitRelated
-    func getUnsyncedObjects(type: String) -> [AnyObject]{
+    func getUnsyncedObjects(_ type: String) -> [AnyObject]{
         switch type{
         case "post":
             let unsyncedPosts = PostController.sharedController.posts.filter{ $0.isSynced != true}
@@ -90,7 +90,7 @@ class PostController {
     }
     
     func fetchPosts(){ // Fetches all posts and comments upon launch of the app
-        let perPostCompletion: (record: CKRecord) -> Void = { record in
+        let perPostCompletion: (_ record: CKRecord) -> Void = { record in
             if let newPost = Post(record: record) {
                     PostController.sharedController.posts.append(newPost)
             }
@@ -103,14 +103,14 @@ class PostController {
             } else {
                 // Begin fetch for comments
                 _ = PostController.sharedController.posts.map { self.getCommentsForPost($0) }
-                let notification = NSNotification(name: "toggleNetworkIndicator", object: nil)
+                let notification = Notification(name: "toggleNetworkIndicator", object: nil)
                
-                NSNotificationCenter.defaultCenter().postNotification(notification)
+                NotificationCenter.default.post(notification)
             }
         }
     }
     
-    func getCommentsForPost(post: Post){
+    func getCommentsForPost(_ post: Post){
         guard let recordID = post.cloudKitRecordID else {return}
         
         let predicate = NSPredicate(format: "post == %@", recordID)
@@ -121,7 +121,7 @@ class PostController {
                 guard let records = records else {return}
                 let comments = records.map { Comment(record: $0) }
                 guard let unwrappedComments = comments as? [Comment] else {return}
-                let sortedComments = unwrappedComments.sort {$0.0.timestamp.timeIntervalSince1970 < $0.1.timestamp.timeIntervalSince1970 }
+                let sortedComments = unwrappedComments.sorted {$0.0.timestamp.timeIntervalSince1970 < $0.1.timestamp.timeIntervalSince1970 }
                 post.comments = sortedComments
             }
         }
@@ -132,8 +132,8 @@ class PostController {
         
     }
     
-    func fetchNewPosts(references: [CKReference], completion: ([CKRecord] -> Void)){ // Fetches any new posts from the cloud, and corresponding comments
-        let perPostCompletion: (record: CKRecord) -> Void = { record in
+    func fetchNewPosts(_ references: [CKReference], completion: @escaping (([CKRecord]) -> Void)){ // Fetches any new posts from the cloud, and corresponding comments
+        let perPostCompletion: (_ record: CKRecord) -> Void = { record in
             if let newPost = Post(record: record) {
                 PostController.sharedController.newPostsFromCloud.append(newPost)
             }
@@ -154,7 +154,7 @@ class PostController {
     
     }
     
-    func fetchNewComments(references: [CKReference], completion: ([CKRecord] -> Void)){ // Fetches any new comments made to existing posts.
+    func fetchNewComments(_ references: [CKReference], completion: @escaping (([CKRecord]) -> Void)){ // Fetches any new comments made to existing posts.
         
           let predicate = NSPredicate(format: "NOT(recordID IN %@)", references)
     CloudKitManager.sharedController.fetchRecordsWithType("comment", predicate: predicate, recordFetchedBlock: nil) { (records, error) in
@@ -188,7 +188,7 @@ class PostController {
         }
         // Generate a list of all records on device as CKReference and pass to CloudKit
         
-        let fullPostReferenceList = PostController.sharedController.posts.map{ CKReference(recordID: $0.cloudKitRecordID!, action: .DeleteSelf) }
+        let fullPostReferenceList = PostController.sharedController.posts.map{ CKReference(recordID: $0.cloudKitRecordID!, action: .deleteSelf) }
         
         newPostsFromCloud = []
         
@@ -198,14 +198,14 @@ class PostController {
             // Now search for any new comments for existing posts
             
             let fullCommentList = PostController.sharedController.posts.flatMap{ $0.comments}
-            let fullCommentReferenceList = fullCommentList.map{ CKReference(recordID: $0.cloudKitRecordID!, action: .DeleteSelf)}
+            let fullCommentReferenceList = fullCommentList.map{ CKReference(recordID: $0.cloudKitRecordID!, action: .deleteSelf)}
             
             self.fetchNewComments(fullCommentReferenceList){ records in
                 
-                dispatch_async(dispatch_get_main_queue(), {
-                    let notification = NSNotification(name: "toggleNetworkIndicator", object: nil)
+                DispatchQueue.main.async(execute: {
+                    let notification = Notification(name: Notification.Name(rawValue: "toggleNetworkIndicator"), object: nil)
                     
-                    NSNotificationCenter.defaultCenter().postNotification(notification)
+                    NotificationCenter.default.post(notification)
 
                 })
             }
@@ -214,19 +214,19 @@ class PostController {
        
     }
     
-    func returnPostFromCKReference(postReference: CKReference) -> Post? {
+    func returnPostFromCKReference(_ postReference: CKReference) -> Post? {
         // Grabs a Post object by querying its recordID
         let recordID = postReference.recordID
         return self.posts.filter{ $0.cloudKitRecordID == recordID }.first
     }
     
     
-    func subscribeToFollowPost(type: String, post: Post, completion: (success: Bool) -> Void){
+    func subscribeToFollowPost(_ type: String, post: Post, completion: @escaping (_ success: Bool) -> Void){
         
-        let reference = CKReference(recordID: post.cloudKitRecordID!, action: .DeleteSelf)
+        let reference = CKReference(recordID: post.cloudKitRecordID!, action: .deleteSelf)
         
         let predicate = NSPredicate(format: "post == %@", reference)
-        CloudKitManager.sharedController.subscribe(type, predicate: predicate, subscriptionID: NSUUID().UUIDString, contentAvailable: false, alertBody: "New comment on a post you're following!", desiredKeys: nil, options: .FiresOnRecordCreation) { (subscription, error) in
+        CloudKitManager.sharedController.subscribe(type, predicate: predicate, subscriptionID: UUID().uuidString, contentAvailable: false, alertBody: "New comment on a post you're following!", desiredKeys: nil, options: .firesOnRecordCreation) { (subscription, error) in
             if error != nil{
                 print("Error saving subscription: \(error?.localizedDescription)")
                 completion(success: false)
@@ -255,7 +255,7 @@ class PostController {
         
     }
     
-    func unsubscribeFromPost(type: String, post: Post, completion: (success: Bool) -> Void){
+    func unsubscribeFromPost(_ type: String, post: Post, completion: @escaping (_ success: Bool) -> Void){
         guard let subscriptionID = post.subscriptionID else { return}
         CloudKitManager.sharedController.unsubscribe(subscriptionID) { (subscriptionID, error) in
             if error != nil {

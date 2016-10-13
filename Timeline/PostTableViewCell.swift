@@ -14,7 +14,7 @@ class PostTableViewCell: UITableViewCell {
     
     @IBOutlet weak var postImageView: UIImageView!
     
-    func updateWithPost(post: Post){
+    func updateWithPost(_ post: Post){
         self.postImageView.image = post.image
     }
   
