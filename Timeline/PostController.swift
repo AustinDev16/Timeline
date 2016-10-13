@@ -103,7 +103,7 @@ class PostController {
             } else {
                 // Begin fetch for comments
                 _ = PostController.sharedController.posts.map { self.getCommentsForPost($0) }
-                let notification = Notification(name: "toggleNetworkIndicator", object: nil)
+                let notification = Notification(name: Notification.Name(rawValue: "toggleNetworkIndicator"), object: nil)
                
                 NotificationCenter.default.post(notification)
             }
@@ -229,7 +229,7 @@ class PostController {
         CloudKitManager.sharedController.subscribe(type, predicate: predicate, subscriptionID: UUID().uuidString, contentAvailable: false, alertBody: "New comment on a post you're following!", desiredKeys: nil, options: .firesOnRecordCreation) { (subscription, error) in
             if error != nil{
                 print("Error saving subscription: \(error?.localizedDescription)")
-                completion(success: false)
+                completion(false)
             } else {
                 guard let subscription = subscription else {return}
                 print("Successfully saved subscription.")
@@ -249,7 +249,7 @@ class PostController {
                         post.cloudKitRecord = records.first
                     }
                 })
-             completion(success: true)
+             completion(true)
             }
         }
         
@@ -260,7 +260,7 @@ class PostController {
         CloudKitManager.sharedController.unsubscribe(subscriptionID) { (subscriptionID, error) in
             if error != nil {
                 print("Error canceling subscription: \(error?.localizedDescription)")
-                completion(success: false)
+                completion(false)
             } else {
                 post.subscriptionID = nil
                 
@@ -278,7 +278,7 @@ class PostController {
 
                     }
                 })
-             completion(success: true)
+             completion(true)
             }
         }
         

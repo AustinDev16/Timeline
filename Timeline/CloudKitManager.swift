@@ -294,7 +294,7 @@ class CloudKitManager {
     func checkCloudKitAvailability() {
         
         CKContainer.default().accountStatus() {
-            (accountStatus:CKAccountStatus, error:NSError?) -> Void in
+            (accountStatus:CKAccountStatus, error:Error?) -> Void in
             
             switch accountStatus {
             case .available:
@@ -303,10 +303,10 @@ class CloudKitManager {
             default:
                 self.handleCloudKitUnavailable(accountStatus, error: error)
             }
-        } as! (CKAccountStatus, Error?) -> Void as! (CKAccountStatus, Error?) -> Void as! (CKAccountStatus, Error?) -> Void as! (CKAccountStatus, Error?) -> Void as! (CKAccountStatus, Error?) -> Void as! (CKAccountStatus, Error?) -> Void as! (CKAccountStatus, Error?) -> Void
+        } 
     }
     
-    func handleCloudKitUnavailable(_ accountStatus: CKAccountStatus, error:NSError?) {
+    func handleCloudKitUnavailable(_ accountStatus: CKAccountStatus, error:Error?) {
         
         var errorText = "Synchronization is disabled\n"
         if let error = error {
